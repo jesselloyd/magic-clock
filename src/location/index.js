@@ -8,34 +8,41 @@ function gradientBetween(source, destination) {
   return (destination.longitude - source.longitude) / (destination.latitude - source.latitude);
 }
 
-function sortDestinationsByDistanceFromAnchor(unsortedDestinations, anchor) {
+function sortDestinationsByDistanceFrom(unsortedDestinations, position) {
   return [...unsortedDestinations].sort(
     (destination, nextDestination) =>
-      distanceBetween(destination, anchor) - distanceBetween(nextDestination, anchor)
+      distanceBetween(destination, position) - distanceBetween(nextDestination, position)
   );
 }
 
-function getClockPositionForDestination(destinations, destination) {
-  return destinations.findIndex(
-    d => d.latitude === destination.latitude && d.longitude === destination.longitude
+function getIndexRelativeToDestinations(destinations, position) {
+  const [nearestDestination] = sortDestinationsByDistanceFrom(destinations, position);
+  const nearestDestinationIndex = destinations.findIndex(
+    d => d.latitude === nearestDestination.latitude && d.longitude === nearestDestination.longitude
   );
-}
 
-function convertGeoPointToPointRelativeToDestinations(destinations, position) {
-  const [nearestDestination] = sortDestinationsByDistanceFromAnchor(destinations, position);
   const distanceFromNearestDestination = distanceBetween(position, nearestDestination);
-  const clockIndex = getClockPositionForDestination(destinations, nearestDestination);
-
   const directionRelativeToNearestDestination = Math.sign(
     gradientBetween(position, nearestDestination)
   );
+  const nextNearestDestinationIndex =
+    (((nearestDestinationIndex + directionRelativeToNearestDestination) % destinations.length) +
+      destinations.length) %
+    destinations.length;
 
-  return clockIndex + directionRelativeToNearestDestination * distanceFromNearestDestination;
+  const normalizedDistanceFromNearestDestination =
+    distanceFromNearestDestination /
+    distanceBetween(nearestDestination, destinations[nextNearestDestinationIndex]);
+
+  return (
+    nearestDestinationIndex +
+    directionRelativeToNearestDestination * normalizedDistanceFromNearestDestination
+  );
 }
 
 module.exports = {
   distanceBetween,
-  sortDestinationsByDistanceFromAnchor,
-  convertGeoPointToPointRelativeToDestinations,
+  sortDestinationsByDistanceFrom,
+  getIndexRelativeToDestinations,
   gradientBetween
 };
