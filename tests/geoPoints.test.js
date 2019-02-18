@@ -1,5 +1,5 @@
 /* eslint-env jest */
-const location = require('../src/location');
+const geoPoints = require('../src/location/geoPoints');
 
 const destinations = [
   {
@@ -24,22 +24,22 @@ const destinations = [
   }
 ];
 
-describe('location', () => {
+describe('geoPoints', () => {
   test('distanceBetween calculates distances between two geographic points', () => {
     const source = { latitude: 1, longitude: 5 };
     const destination = { latitude: 12, longitude: 3 };
-    expect(location.distanceBetween(source, destination)).toEqual(11.180339887498949);
+    expect(geoPoints.distanceBetween(source, destination)).toEqual(11.180339887498949);
   });
 
   test('gradientBetween calculates gradient between two geographic points', () => {
     const source = { latitude: 1, longitude: 5 };
     const destination = { latitude: 12, longitude: 3 };
-    expect(location.gradientBetween(source, destination)).toEqual(-2 / 11);
+    expect(geoPoints.gradientBetween(source, destination)).toEqual(-2 / 11);
   });
 
   test('sortDestinationsByDistanceFrom sorts destinations by their distance from an anchor', () => {
     const anchor = destinations[0];
-    const sortedDestinations = location.sortDestinationsByDistanceFrom(destinations, anchor);
+    const sortedDestinations = geoPoints.sortDestinationsByDistanceFrom(destinations, anchor);
 
     expect(sortedDestinations[0]).toMatchObject(destinations[0]);
     expect(sortedDestinations[1]).toMatchObject(destinations[1]);
@@ -54,11 +54,11 @@ describe('location', () => {
       longitude: -87.096298
     };
 
-    const sortedDestinations = location.sortDestinationsByDistanceFrom(
+    const sortedDestinations = geoPoints.sortDestinationsByDistanceFrom(
       destinations,
       destinations[0]
     );
-    const indexRelativeToClock = location.getIndexRelativeToDestinations(
+    const indexRelativeToClock = geoPoints.getIndexRelativeToDestinations(
       sortedDestinations,
       someDestination
     );
