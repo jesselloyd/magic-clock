@@ -37,7 +37,7 @@ describe('location', () => {
     expect(location.gradientBetween(source, destination)).toEqual(-2 / 11);
   });
 
-  test('sortDestinationsByDistanceFromAnchor sorts destinations by their distance from an anchor', () => {
+  test('sortDestinationsByDistanceFrom sorts destinations by their distance from an anchor', () => {
     const anchor = destinations[0];
     const sortedDestinations = location.sortDestinationsByDistanceFrom(destinations, anchor);
 
