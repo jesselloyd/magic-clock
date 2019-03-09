@@ -20,7 +20,8 @@
   "dependencies": {
     "async-mqtt": "^2.0.0",
     "dotenv": "^6.2.0",
-    "mqtt": "^2.18.8"
+    "mqtt": "^2.18.8",
+    "rpio": "^1.0.13"
   },
   "scripts": {
     "test": "jest"
